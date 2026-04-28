@@ -1,0 +1,12 @@
+# Ubuntu 24.04 SSH 服务
+services:
+  ubuntu-ssh:
+    image: ubuntu24:latest
+    container_name: ubuntu24
+    environment:
+      - ROOT_PASSWORD=${ROOT_PASSWORD:-123456}
+    ports:
+      - "2222:22"
+    volumes:
+      - ./vdisk_mount:/data  # 虚拟磁盘挂载到容器 /data 目录
+    restart: unless-stopped
