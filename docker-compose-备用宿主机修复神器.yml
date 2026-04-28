@@ -2,21 +2,19 @@ services:
   ubuntu-ssh:
     image: registry.cn-beijing.aliyuncs.com/xiaozhu245/ubuntu_ssh:latest
     container_name: ubuntu24
+    init: true
 
     environment:
-      ROOT_PASSWORD: ${ROOT_PASSWORD:?ROOT_PASSWORD is required}
-      SSH_PORT: ${SSH_PORT:-2222}
+      - ROOT_PASSWORD=${ROOT_PASSWORD:-<替换密码>}
+      - SSH_PORT=${SSH_PORT:-2222}
 
     network_mode: host
 
     privileged: true
     user: "0:0"
-    restart: unless-stopped
-
-    pid: host
-    ipc: host
-    uts: host
-    cgroup: host
+    restart: always
+    stop_signal: SIGTERM
+    stop_grace_period: 15s
 
     volumes:
       - type: bind
@@ -27,9 +25,6 @@ services:
       - type: bind
         source: /run/dbus/system_bus_socket
         target: /run/dbus/system_bus_socket
-      - type: bind
-        source: /var/run
-        target: /var/run
 
     healthcheck:
       test: ["CMD-SHELL", "ss -ltn | grep -q \":${SSH_PORT:-2222} \" || exit 1"]

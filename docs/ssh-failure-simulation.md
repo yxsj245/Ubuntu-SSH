@@ -45,6 +45,10 @@ SSH_PORT=2222
 
 这样既能保留 `host` 网络带来的宿主机贴近性，也能保留一个独立的容器 SSH 维修入口。
 
+另外，不建议再额外挂载整个宿主机 `/var/run`，也不建议默认开启 `pid: host`、`ipc: host`、`uts: host`、`cgroup: host`。这些配置虽然会让容器更贴近宿主机，但也更容易导致 Docker / containerd 对容器生命周期的管理出现异常，表现为容器难以正常停止、删除或重建。
+
+如果希望宿主机重启后容器自动拉起，可以将重启策略设置为 `restart: always`。但在测试或排障阶段，如果需要手动停住容器避免反复拉起，建议临时改回 `unless-stopped` 或先执行 `docker update --restart=no <容器名>`。
+
 ## 备份建议
 
 在注入故障前，先备份宿主机 SSH 目录：
