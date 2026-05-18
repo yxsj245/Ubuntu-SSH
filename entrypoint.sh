@@ -2,7 +2,7 @@
 set -e
 
 # 运行时设置 SSH 监听端口，避免与宿主机 22 端口冲突
-SSH_PORT="${SSH_PORT:-2222}"
+SSH_PORT="${SSH_PORT:-22}"
 
 # 简单校验端口格式，避免传入异常值
 case "$SSH_PORT" in
